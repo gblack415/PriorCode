@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+	################################################################################
+	Description - 
+	################################################################################
+	02/28/19 glb created
+	06/01/23 glb added delete date
+	07/20/23 glb added logic for long lists
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ICS File Generator</title>
+<link rel="stylesheet" type="text/css" href="../css/base.css" />
+<script type="text/javascript" src="../Javascript/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="../Javascript/Blob.js"></script>
+<script type="text/javascript" src="../Javascript/FileSaver.js"></script>
+<script type="text/javascript" src="../Javascript/ics.js"></script>
+<script type="text/javascript">
+Date.prototype.addDays = function (num) {
+    var value = this.valueOf();
+    value += 86400000 * num;
+    return new Date(value);
+}
+
+function convertDate(date) {
+  //https://stackoverflow.com/questions/32192922/how-do-i-get-a-date-in-yyyy-mm-dd-format
+  var yyyy = date.getFullYear().toString();
+  var mm = (date.getMonth()+1).toString();
+  var dd  = date.getDate().toString();
+
+  var mmChars = mm.split('');
+  var ddChars = dd.split('');
+
+  return yyyy + '-' + (mmChars[1]?mm:"0"+mmChars[0]) + '-' + (ddChars[1]?dd:"0"+ddChars[0]);
+}
+
+function deleteDate(date) {
+  //https://stackoverflow.com/questions/32192922/how-do-i-get-a-date-in-yyyy-mm-dd-format
+
+  var yyyy = date.getFullYear().toString();
+  var mm = (date.getMonth()+1).toString();
+  var dd  = date.getDate().toString();
+
+  var mmChars = mm.split('');
+  var ddChars = dd.split('');
+
+  //return yyyy + '-' + (mmChars[1]?mm:"0"+mmChars[0]) + '-' + (ddChars[1]?dd:"0"+ddChars[0]);
+  return (mmChars[1]?mm:"0"+mmChars[0])  + '/' + (ddChars[1]?dd:"0"+ddChars[0]) + '/' + yyyy
+}
+
+function GetICS()
+{
+	//https://stackoverflow.com/questions/14892422/ics-with-alert
+	//Add VALARM
+    cal = ics();
+    cal.addEvent($('#DecomSubject').val(),$('#DecomBody').val().replaceAll('\n',' ') + " PH2: " + $('#PhaseTwo').val(), 'vSphere', $('#PhaseTwo').val(), $('#PhaseTwo').val());
+	cal.download($('#PdfFileName').val())
+}
+
+$(document).ready(function() 
+{	
+	var todayDate=new Date();
+
+	const queryString = window.location.search;
+
+	// 2. Initialize the parser
+	const urlParams = new URLSearchParams(queryString);
+
+	// 3. Extract your parameters
+	const sub = urlParams.get('sub');
+	const bdy = urlParams.get('bdy');     
+	const dt = urlParams.get('dt');   
+	
+	$('#DecomSubject').val(sub);
+	$('#DecomBody').val(bdy);
+	$('#PhaseTwo').val(dt);
+	
+	if ($('#PhaseTwo').val() == "") 
+	{
+		$('#PhaseTwo').val(deleteDate(todayDate) + ' 8:00 am');
+	}
+});
+
+function UpdateBoxes()
+{
+	
+	var todayDate=new Date();
+
+	$('#PdfFileName').val(convertDate(todayDate));
+	
+}
+
+
+function CopyCt() {
+  /* Get the text field */
+  var copyText = document.getElementById("CmdbText");
+
+  /* Select the text field */
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+  /* Copy the text inside the text field */
+  document.execCommand("copy");
+}
+
+function pad(n, width, z) {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
+</script>
+</head>
+<body>
+<table class="dataTable" style="float:left;">
+
+<tr>
+<td class='VHeader'>ServerName(From Ticket)</td><td><input type="text" id="ServerName" size="90"/></td>
+</tr>
+<tr>
+<td class='VHeader'>ServiceRequest#(From Ticket)</td><td><input type="text" id="ServiceRequest" size="40"/></td>
+</tr>
+<tr>
+<td class='VHeader'>ChangeRequest#(From Change Request)</td><td><input type="text" id="ChangeRequest" size="40"/></td>
+</tr>
+
+
+<tr><td class='VHeader'>General Decom Email(Click Email link in Ticket) <br /> Change "requestor" in Cherwell message to everyone.<br /> Remove question in default Cherwell email.</td><td>
+<input type="text" id="DecomSubject" size="90" /><br /><textarea id="DecomBody" rows="7" cols="90"></textarea></td> </tr>
+<tr>
+<td class='VHeader'>FileName</td><td><input type="text" id="PdfFileName" size="40"/><br /><button onclick="UpdateBoxes()">Update Boxes</button></td>
+</tr>
+<tr><td class='VHeader'>Delete Date:</td><td> <input type="text" id="PhaseTwo" size="20"/><button onclick="GetICS()">ICS File</button></td></tr>
+
+</table>
+</body>
+
+</html>

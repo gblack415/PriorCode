@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+	################################################################################
+	Description - Remove unnecessary quotes and CRLF's
+	####################################
+	07/23/26 glb created
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>De-Excel</title>
+<link rel="stylesheet" type="text/css" href="../css/base.css" />
+<script type="text/javascript" src="../Javascript/jquery-1.9.1.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() 
+{	
+
+});
+
+
+
+function UpdateBoxes()
+{
+	//$('#CleanBody').val($('#RawBody').val().replace(/"/g,"").replace(/\r\n|\r|\n/g,""));
+	$('#CleanBody').val($('#RawBody').val().replace(/"/g,"").trim());
+	
+	var tas = document.querySelectorAll('textarea');
+	[].forEach.call(tas, function(ta) {
+		ta.innerText=ta.value;
+	});
+
+	var fas = document.querySelectorAll("input[type='text']");
+	[].forEach.call(fas, function(fa) {
+		fa.setAttribute("value", fa.value);
+	});
+	
+}
+
+function UpdateBoxesClipboard()
+{
+	UpdateBoxes();
+	var copyText = document.getElementById("CleanBody");
+
+	 /* Select the text field */
+	 copyText.select();
+	 copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+	 /* Copy the text inside the text field */
+	 document.execCommand("copy");
+}
+
+</script>
+</head>
+<body>
+
+<table class="dataTable" style="float:left;">
+<tr><td class='VHeader'>Raw Message</td><td><textarea id="RawBody" rows="20" cols="90"></textarea></td></tr>
+<tr><td colspan="2"><button onclick="UpdateBoxes()">Update Boxes</button><button onclick="UpdateBoxesClipboard()">Update Boxes & Clipboard</button></td></tr>
+<tr><td class='VHeader'>Cleaned Message</td><td><textarea id="CleanBody" rows="20" cols="90"></textarea></td></tr>
+<tr><td colspan="2"><a href="http://phomfax/WebClient/default.aspx?tab=messages&folder=sent">Omtool/Accurotue Sent</a></td></tr>
+</table>
+<br />
+</body>
+</html>
