@@ -1,0 +1,2 @@
+REM EXAMPLE OF COMPLILING WITHOUT AN IDE
+%windir%\Microsoft.Net\Framework\v4.0.30319\csc.exe /t:exe /out:getYahoo.exe getYahoo.cs / /r:Microsoft.Practices.Unity.dll /r:Microsoft.Practices.Prism.Composition.dll /r:Microsoft.Practices.Prism.UnityExtensions.dll / /r:SimpleImpersonation.dll /lib:"./"
