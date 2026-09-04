@@ -13,7 +13,7 @@ README.md - this file
 
 add-printers.ps1 - Adds printer using UNC to workstation remotely.
 
-create_redis.sql - table and view to emulate Redis in MSSQL after Redis for Windows was more difficult to acquire.
+create_redis.sql - table and view to emulate Redis in MSSQL after Redis for Windows became more difficult to acquire.
 
 del-printers.ps1 - Deletes printer using UNC from workstation remotely.
 
