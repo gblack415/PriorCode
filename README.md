@@ -1,4 +1,4 @@
-Examples of code from prior jobs over the years. 
+Examples of code from prior tasks over the years. 
 
 
 AvayaIfx.cs - 
